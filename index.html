@@ -1,0 +1,882 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Modeler | Professional FBX Models & Assets</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0a0a0a;
+            color: #ffffff;
+            overflow-x: hidden;
+        }
+
+        /* Grid Background */
+        .grid-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(0, 255, 132, 0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 255, 132, 0.1) 1px, transparent 1px);
+            background-size: 50px 50px;
+            z-index: -1;
+            animation: gridMove 20s linear infinite;
+        }
+
+        @keyframes gridMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+
+        /* Sidebar Navigation */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 280px;
+            height: 100vh;
+            background: linear-gradient(180deg, #1a1a1a 0%, #0f0f0f 100%);
+            border-right: 1px solid #333;
+            z-index: 1000;
+            padding: 2rem 0;
+        }
+
+        .logo {
+            padding: 0 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .logo h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #00ff84;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logo span {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .nav-menu {
+            list-style: none;
+        }
+
+        .nav-item {
+            margin-bottom: 0.5rem;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem 2rem;
+            color: #ccc;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border-left: 3px solid transparent;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            color: #00ff84;
+            background: rgba(0, 255, 132, 0.1);
+            border-left-color: #00ff84;
+        }
+
+        .nav-link i {
+            font-size: 1.1rem;
+            width: 20px;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 280px;
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        /* Top Bar */
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding: 1rem 2rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .welcome-text h2 {
+            font-size: 1.8rem;
+            color: #fff;
+            margin-bottom: 0.5rem;
+        }
+
+        .welcome-text p {
+            color: #888;
+            font-size: 0.9rem;
+        }
+
+        .status-badge {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: rgba(0, 255, 132, 0.1);
+            border: 1px solid #00ff84;
+            border-radius: 25px;
+            color: #00ff84;
+            font-size: 0.9rem;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background: #00ff84;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+            border-radius: 15px;
+            padding: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            border-color: #00ff84;
+            box-shadow: 0 10px 30px rgba(0, 255, 132, 0.2);
+        }
+
+        .stat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .stat-title {
+            font-size: 0.9rem;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .stat-icon {
+            font-size: 1.5rem;
+            color: #00ff84;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-description {
+            font-size: 0.85rem;
+            color: #666;
+        }
+
+        /* Skills Section */
+        .section {
+            margin-bottom: 3rem;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            color: #fff;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .section-title::before {
+            content: '';
+            width: 4px;
+            height: 20px;
+            background: #00ff84;
+            border-radius: 2px;
+        }
+
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .skill-card {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+            border-radius: 15px;
+            padding: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .skill-card:hover {
+            transform: translateY(-5px);
+            border-color: #00ff84;
+            box-shadow: 0 10px 30px rgba(0, 255, 132, 0.2);
+        }
+
+        .skill-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .skill-icon {
+            width: 50px;
+            height: 50px;
+            background: rgba(0, 255, 132, 0.1);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: #00ff84;
+        }
+
+        .skill-info h3 {
+            color: #fff;
+            font-size: 1.2rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .skill-info p {
+            color: #888;
+            font-size: 0.9rem;
+        }
+
+        .skill-description {
+            color: #ccc;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .skill-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .tag {
+            background: rgba(0, 255, 132, 0.1);
+            border: 1px solid rgba(0, 255, 132, 0.3);
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            color: #00ff84;
+        }
+
+        /* Portfolio Section */
+        .portfolio-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 2rem;
+        }
+
+        .portfolio-card {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .portfolio-card:hover {
+            transform: translateY(-5px);
+            border-color: #00ff84;
+            box-shadow: 0 10px 30px rgba(0, 255, 132, 0.2);
+        }
+
+        .portfolio-image {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(45deg, #333 0%, #555 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: #666;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .portfolio-image::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, transparent 30%, rgba(0, 255, 132, 0.1) 50%, transparent 70%);
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .portfolio-content {
+            padding: 2rem;
+        }
+
+        .portfolio-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 1rem;
+        }
+
+        .portfolio-title {
+            font-size: 1.3rem;
+            color: #fff;
+            margin-bottom: 0.5rem;
+        }
+
+        .portfolio-type {
+            background: rgba(0, 255, 132, 0.1);
+            border: 1px solid rgba(0, 255, 132, 0.3);
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            color: #00ff84;
+        }
+
+        .portfolio-description {
+            color: #ccc;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .portfolio-specs {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .spec-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .spec-label {
+            color: #888;
+            font-size: 0.9rem;
+        }
+
+        .spec-value {
+            color: #00ff84;
+            font-weight: 600;
+        }
+
+        /* Contact Section */
+        .contact-card {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+            border-radius: 15px;
+            padding: 3rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .contact-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 2rem;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, #00ff84, #00cc6a);
+            color: #000;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0, 255, 132, 0.3);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: #00ff84;
+            border: 2px solid #00ff84;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(0, 255, 132, 0.1);
+            transform: translateY(-2px);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+            
+            .portfolio-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="grid-background"></div>
+    
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="logo">
+            <h1><i class="fas fa-cube"></i> Velocity</h1>
+            <span>3D modeler</span>
+        </div>
+        
+        <ul class="nav-menu">
+            <li class="nav-item">
+                <a href="#home" class="nav-link active">
+                    <i class="fas fa-home"></i>
+                    <span>Dashboard</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="#skills" class="nav-link">
+                    <i class="fas fa-cogs"></i>
+                    <span>Capabilities</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="#portfolio" class="nav-link">
+                    <i class="fas fa-folder"></i>
+                    <span>Portfolio</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="#contact" class="nav-link">
+                    <i class="fas fa-envelope"></i>
+                    <span>Contact</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Top Bar -->
+        <div class="top-bar">
+            <div class="welcome-text">
+                <h2>3D Modeler</h2>
+                <p>Delivering high-quality 3D models and game-ready assets</p>
+            </div>
+            <div class="status-badge">
+                <div class="status-dot"></div>
+                Available for Projects
+            </div>
+        </div>
+
+        <!-- Stats Section -->
+        <section id="home">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-title">Models Delivered</div>
+                        <div class="stat-icon"><i class="fas fa-cube"></i></div>
+                    </div>
+                    <div class="stat-value">9</div>
+                    <div class="stat-description">High-quality 3D models across various types of games</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-title">File Formats</div>
+                        <div class="stat-icon"><i class="fas fa-file-export"></i></div>
+                    </div>
+                    <div class="stat-value">8+</div>
+                    <div class="stat-description">FBX, OBJ, GLB, DAE, and more supported formats</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-title">Client Rating</div>
+                        <div class="stat-icon"><i class="fas fa-star"></i></div>
+                    </div>
+                    <div class="stat-value">4.9/5</div>
+                    <div class="stat-description">Average rating from satisfied clients</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-title">Response Time</div>
+                        <div class="stat-icon"><i class="fas fa-clock"></i></div>
+                    </div>
+                    <div class="stat-value">< 2H</div>
+                    <div class="stat-description">Fast communication and project updates</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Skills Section -->
+        <section id="skills" class="section">
+            <h2 class="section-title">My Specializations</h2>
+            <div class="skills-grid">
+                <div class="skill-card">
+                    <div class="skill-header">
+                        <div class="skill-icon">
+                            <i class="fas fa-cube"></i>
+                        </div>
+                        <div class="skill-info">
+                            <h3>Hard Surface Modeling</h3>
+                            <p>Clean topology & precision</p>
+                        </div>
+                    </div>
+                    <div class="skill-description">
+                        Specialized in creating precise hard surface models with clean topology. Perfect for mechanical parts, vehicles, weapons, and architectural elements.
+                    </div>
+                    <div class="skill-tags">
+                        <span class="tag">Mechanical</span>
+                        <span class="tag">Vehicles</span>
+                        <span class="tag">Weapons</span>
+                        <span class="tag">Architecture</span>
+                    </div>
+                </div>
+                
+                <div class="skill-card">
+                    <div class="skill-header">
+                        <div class="skill-icon">
+                            <i class="fas fa-gamepad"></i>
+                        </div>
+                        <div class="skill-info">
+                            <h3>Game-Ready Assets</h3>
+                            <p>Optimized for real-time</p>
+                        </div>
+                    </div>
+                    <div class="skill-description">
+                        Creating optimized 3D models for games with proper LODs, UV mapping, and polygon budgets. Compatible with Unity, Unreal Engine, and other platforms.
+                    </div>
+                    <div class="skill-tags">
+                        <span class="tag">Unity</span>
+                        <span class="tag">Unreal</span>
+                        <span class="tag">LODs</span>
+                        <span class="tag">Optimization</span>
+                    </div>
+                </div>
+                
+                <div class="skill-card">
+                    <div class="skill-header">
+                        <div class="skill-icon">
+                            <i class="fas fa-home"></i>
+                        </div>
+                        <div class="skill-info">
+                            <h3>Architectural Models</h3>
+                            <p>Detailed & accurate</p>
+                        </div>
+                    </div>
+                    <div class="skill-description">
+                        Detailed architectural models for visualization, VR experiences, and construction planning. Accurate measurements and realistic proportions.
+                    </div>
+                    <div class="skill-tags">
+                        <span class="tag">Buildings</span>
+                        <span class="tag">Interiors</span>
+                        <span class="tag">Furniture</span>
+                        <span class="tag">VR Ready</span>
+                    </div>
+                </div>
+                
+                <div class="skill-card">
+                    <div class="skill-header">
+                        <div class="skill-icon">
+                            <i class="fas fa-mobile-alt"></i>
+                        </div>
+                        <div class="skill-info">
+                            <h3>Product Modeling</h3>
+                            <p>Commercial grade</p>
+                        </div>
+                    </div>
+                    <div class="skill-description">
+                        High-quality product models for marketing, prototyping, and visualization. Accurate to specifications with attention to detail.
+                    </div>
+                    <div class="skill-tags">
+                        <span class="tag">Electronics</span>
+                        <span class="tag">Consumer Goods</span>
+                        <span class="tag">Marketing</span>
+                        <span class="tag">Prototyping</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Portfolio Section -->
+        <section id="portfolio" class="section">
+            <h2 class="section-title">Recent Projects</h2>
+            <div class="portfolio-grid">
+                <div class="portfolio-card">
+                    <div class="portfolio-image">
+                        <i class="fas fa-car"></i>
+                    </div>
+                    <div class="portfolio-content">
+                        <div class="portfolio-header">
+                            <div>
+                                <h3 class="portfolio-title">Sports Car Model</h3>
+                            </div>
+                            <div class="portfolio-type">Hard Surface</div>
+                        </div>
+                        <p class="portfolio-description">
+                            High-detail sports car model with clean topology and proper UV mapping. Includes interior details and separate parts for customization.
+                        </p>
+                        <div class="portfolio-specs">
+                            <div class="spec-item">
+                                <span class="spec-label">Polygons</span>
+                                <span class="spec-value">45K</span>
+                            </div>
+                            <div class="spec-item">
+                                <span class="spec-label">Format</span>
+                                <span class="spec-value">FBX</span>
+                            </div>
+                            <div class="spec-item">
+                                <span class="spec-label">UV Mapped</span>
+                                <span class="spec-value">Yes</span>
+                            </div>
+                            <div class="spec-item">
+                                <span class="spec-label">Game Ready</span>
+                                <span class="spec-value">Yes</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="portfolio-card">
+                    <div class="portfolio-image">
+                        <i class="fas fa-building"></i>
+                    </div>
+                    <div class="portfolio-content">
+                        <div class="portfolio-header">
+                            <div>
+                                <h3 class="portfolio-title">Modern Office Building</h3>
+                            </div>
+                            <div class="portfolio-type">Architecture</div>
+                        </div>
+                        <p class="portfolio-description">
+                            Complete office building model with detailed facade, interior spaces, and modular components for easy customization.
+                        </p>
+                        <div class="portfolio-specs">
+                            <div class="spec-item">
+                                <span class="spec-label">Polygons</span>
+                                <span class="spec-value">120K</span>
+                            </div>
+                            <div class="spec-item">
+                                <span class="spec-label">Format</span>
+                                <span class="spec-value">FBX</span>
+                            </div>
+                            <div class="spec-item">
+                                <span class="spec-label">Modular</span>
+                                <span class="spec-value">Yes</span>
+                            </div>
+                            <div class="spec-item">
+                                <span class="spec-label">Scale</span>
+                                <span class="spec-value">Real World</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="portfolio-card">
+                    <div class="portfolio-image">
+                        <i class="fas fa-laptop"></i>
+                    </div>
+                    <div class="portfolio-content">
+                        <div class="portfolio-header">
+                            <div>
+                                <h3 class="portfolio-title">Gaming Laptop</h3>
+                            </div>
+                            <div class="portfolio-type">Product</div>
+                        </div>
+                        <p class="portfolio-description">
+                            Detailed gaming laptop model with accurate proportions, separate components, and clean geometry for product visualization.
+                        </p>
+                        <div class="portfolio-specs">
+                            <div class="spec-item">
+                                <span class="spec-label">Polygons</span>
+                                <span class="spec-value">28K</span>
+                            </div>
+                            <div class="spec-item">
+                                <span class="spec-label">Format</span>
+                                <span class="spec-value">FBX</span>
+                            </div>
+                            <div class="spec-item">
+                                <span class="spec-label">Components</span>
+                                <span class="spec-value">15+</span>
+                            </div>
+                            <div class="spec-item">
+                                <span class="spec-label">UV Mapped</span>
+                                <span class="spec-value">Yes</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="portfolio-card">
+                    <div class="portfolio-image">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <div class="portfolio-content">
+                        <div class="portfolio-header">
+                            <div>
+                                <h3 class="portfolio-title">Medieval Weapon Set</h3>
+                            </div>
+                            <div class="portfolio-type">Game Assets</div>
+                        </div>
+                        <p class="portfolio-description">
+                            Complete set of medieval weapons optimized for games. Each weapon has multiple LOD levels and proper collision meshes.
+                        </p>
+                        <div class="portfolio-specs">
+                            <div class="spec-item">
+                                <span class="spec-label">Items</span>
+                                <span class="spec-value">12</span>
+                            </div>
+                            <div class="spec-item">
+                                <span class="spec-label">Format</span>
+                                <span class="spec-value">FBX</span>
+                            </div>
+                            <div class="spec-item">
+                                <span class="spec-label">LOD Levels</span>
+                                <span class="spec-value">3</span>
+                            </div>
+                            <div class="spec-item">
+                                <span class="spec-label">Collision</span>
+                                <span class="spec-value">Included</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact" class="section">
+            <h2 class="section-title">Ready to Start Your Project?</h2>
+            <div class="contact-card">
+                <h3 style="color: #00ff84; margin-bottom: 1rem;">Let's Create Something Amazing</h3>
+                <p style="color: #ccc; margin-bottom: 2rem;">
+                    I deliver high-quality 3D models in FBX and other formats. Fast turnaround, professional communication, and models that meet your exact specifications.
+                </p>
+                <div class="contact-buttons">
+                    <a href="YOUR_FIVERR_PROFILE_URL" class="btn btn-primary" target="_blank">
+    <i class="fas fa-briefcase"></i>
+    Hire on Fiverr
+</a>
+                    <a href="#" class="btn btn-secondary">
+                        <i class="fab fa-discord"></i>
+                        Discord
+                    </a>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        // Active navigation link
+        const navLinks = document.querySelectorAll('.nav-link');
+        navLinks.forEach(link => {
+            link.addEventListener('click', function() {
+                navLinks.forEach(l => l.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+
+        // Intersection Observer for section highlighting
+        const sections = document.querySelectorAll('section');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const id = entry.target.id;
+                    navLinks.forEach(link => {
+                        link.classList.remove('active');
+                        if (link.getAttribute('href') === `#${id}`) {
+                            link.classList.add('active');
+                        }
+                    });
+                }
+            });
+        }, { threshold: 0.3 });
+
+        sections.forEach(section => {
+            observer.observe(section);
+        });
+    </script>
+</body>
+</html>
